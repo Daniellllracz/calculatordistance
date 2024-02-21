@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="calculatorApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <title>Document</title>
+</head>
+<body ng-controller="CalculatorController">
+    <div class="calculator">
+        <table>
+            <thead>
+                <tr>
+                    <th>Line number</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Speed (MM:SS)</th>
+                    <th>Total distance (km)</th>
+                </tr>
+            </thead>
+            <tbody ng-init="updateRunners()">
+                <tr ng-repeat="member in teamMembers">
+                    <td>{{$index + 1}}</td>
+                    <td><input type="text" ng-model="member.firstName" ng-change="updateRunners()"></td>
+                    <td><input type="text" ng-model="member.lastName" ng-change="updateRunners()"></td>
+                    <td><input type="text" maxlength="4" ng-model="member.speed" ng-change="formatTime(member)"></td>
+                    <td>{{ runnerDistance[member.firstName + ' ' + member.lastName] || 0}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2>Stage Assignment Table</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Line Number</th>
+                    <th>Distance  (km)</th>
+                    <th>Starting Point</th>
+                    <th>Arriving Point</th>
+                    <th>Name</th>
+                    <th>Runner</th>
+                    <th>Runner's speed in ss</th>
+                    <th>Time (HH:MM:SS)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="stage in stages">
+                    <td>{{ $index + 1}}</td>
+                    <td>{{ stage.distance}}</td>
+                    <td>{{stage.startingLocation}}</td>
+                    <td>{{stage.arravingLocation}}</td>
+                    <td>{{stage.name}}</td>
+                    <td>
+                        <select ng-model="stage.runner" 
+                        ng-change="calculateTotalDistance(stage.distance, stage.runner)">
+                            <option value="">No runner selected</option>
+                            <option ng-repeat="runner in runners" value="{{runner}}">{{runner}}</option>
+                        </select>
+                    </td>
+                    <td>{{getRunnerSpeed(stage.runner)}}</td>
+                    <td>{{calculateTime(stage.distance, getRunnerSpeed(stage.runner))}}</td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+    
+
+    <script src="app.js"></script>
+</body>
+</html>
